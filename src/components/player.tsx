@@ -15,6 +15,7 @@ const Player = (props: PlayerProps) => {
   useEffect(() => {
     if (props.currentTrack) {
       const url = DOWNLOAD_TRACK_URL + '/' + props.currentTrack.hash
+      audio.current.crossOrigin = 'anonymous';
       audio.current.src = url
       setCover(url, cover)
       audio.current.play()
