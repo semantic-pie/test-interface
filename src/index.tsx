@@ -1,35 +1,46 @@
 import { render } from "preact"
-import "./style.css"
-import { useEffect, useState } from "preact/hooks"
+import "./styles/style.css"
 import UserAuth from "./components/user-auth"
 import Player from "./components/player"
 import TracksList from "./components/tracks-list"
-import { Track } from "./interfaces"
-import { fetchTracks } from "./queries"
+import { useSelector, useDispatch } from "react-redux"
+import store, { AppDispatch, RootState } from "./redux/store"
+import { changePage, fetchAllTracks, selectTrack } from "./redux/trackSlice"
+import { TRACKS_PER_PAGE } from "./config"
+import { Provider } from "react-redux"
+import { useEffect } from "preact/hooks"
 
-// const PAGE_SIZE = 10
+function getLastPage(totalItems: number): number {
+  return Math.ceil(totalItems / TRACKS_PER_PAGE)
+}
+
+export function AppWrapper() {
+  return (
+    <Provider store={store}>
+      <App />
+    </Provider>
+  )
+}
 
 export function App() {
-  const [tracks, setTracks] = useState<Track[]>([])
-  const [currentTrack, setCurrentTrack] = useState<Track>()
+  const selectedTrack = useSelector(
+    (state: RootState) => state.tracks.selectedTrack
+  )
+  const pageTracks = useSelector((state: RootState) => state.tracks.pageTracks)
 
-  const [currentPage, setCurrentPage] = useState(1)
-  const toPage = (page: number) =>
-    setCurrentPage((prev) => (page > 0 ? page : prev))
+  const currentPage = useSelector(
+    (state: RootState) => state.tracks.currentPage
+  )
+  const maxPage = useSelector((state: RootState) =>
+    getLastPage(state.tracks.allTracks.length)
+  )
 
-  const onCurrentTrackChange = (t: Track) => {
-    setCurrentTrack(t)
-  }
+  const dispatch = useDispatch<AppDispatch>()
 
   useEffect(() => {
-    console.log("update tracks")
-    fetchTracks(
-      1,
-      10000
-    ).then((tracks) => setTracks(tracks))
-  }, [])
+    dispatch(fetchAllTracks())
+  }, [dispatch]);
 
-  console.log("tracks: ", tracks)
   return (
     <div class="boxer" style={{ width: "fit-content" }}>
       <h1>Test interface</h1>
@@ -39,13 +50,14 @@ export function App() {
       <Search />
       <section style={{ display: "flex", gap: "2px" }}>
         <Control />
-        {currentTrack && <Player currentTrack={currentTrack} />}
-        {tracks.length > 0 && (
+        {selectedTrack && <Player currentTrack={selectedTrack} />}
+        {pageTracks.length > 0 && (
           <TracksList
-            tracks={tracks}
-            setCurrentTrack={onCurrentTrackChange}
+            tracks={pageTracks}
+            setCurrentTrack={(track) => dispatch(selectTrack(track))}
             currentPage={currentPage}
-            toPage={toPage}
+            maxPage={maxPage}
+            changePage={(page) => dispatch(changePage(page))}
           />
         )}
       </section>
@@ -69,7 +81,9 @@ const Search = () => {
 const Control = () => {
   return (
     <div class="boxer">
-      <h4 class="boxer-title" style={{minWidth: '100px'}}>Controls</h4>
+      <h4 class="boxer-title" style={{ minWidth: "100px" }}>
+        Controls
+      </h4>
       <button>generate playlist</button>
       <button>open playlist</button>
       <button>liked</button>
@@ -77,4 +91,4 @@ const Control = () => {
   )
 }
 
-render(<App />, document.getElementById("app"))
+render(<AppWrapper />, document.getElementById("app"))
