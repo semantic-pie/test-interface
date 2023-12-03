@@ -3,7 +3,7 @@ import type { PayloadAction } from '@reduxjs/toolkit'
 import { Track } from '../utils/interfaces'
 import { TRACKS_PER_PAGE } from '../config'
 import Cookies from 'universal-cookie'
-import axios from 'axios'
+import axios, { AxiosHeaders } from 'axios'
 
 export interface TracksState {
   allTracks: Track[]
@@ -38,26 +38,23 @@ const initialState: TracksState = {
 }
 
 export const fetchAllTracks = createAsyncThunk('tracks/fetchAll', async () => {
-  const token = `Bearer ${new Cookies().get('token')}`
-  console.log(new Cookies().get('token'))
-  return axios.get(`http://localhost:8080/api/v1/derezhor/tracks?page=1&limit=1000`, {
-    headers: {
-      'Authorization': token
-    }
-  }).then(data => data.data as Track[])
+  const token = new Cookies().get('token')
+
+  let headers: AxiosHeaders = new AxiosHeaders()
+  if (token) headers.set('Authorization', `Bearer ${token}`)
+
+  return axios.get(`http://localhost:8080/api/v1/derezhor/tracks?page=1&limit=1000`, { headers })
+    .then(data => data.data as Track[])
 });
 
 export const likeTrack = createAsyncThunk('tracks/like', async (hash: string) => {
+  const token = new Cookies().get('token')
 
-  // headers.append('Content-Type', 'application/json');
-  const token = `Bearer ${new Cookies().get('token')}`
-  console.log(new Cookies().get('token'))
-  return axios.post(`http://localhost:8080/api/v1/derezhor/tracks/${hash}/like`, {}, {
-    // method: 'PATCH',
-    headers: {
-      'Authorization': token
-    }
-  }).then(data => data.data)
+  let headers: AxiosHeaders = new AxiosHeaders()
+  if (token) headers.set('Authorization', `Bearer ${token}`)
+
+  return axios.post(`http://localhost:8080/api/v1/derezhor/tracks/${hash}/like`, {}, { headers })
+    .then(data => data.data)
 });
 
 
@@ -71,7 +68,7 @@ export const trackSlice = createSlice({
     toggleLikedTracks: (state) => {
       state.buttons.liked = !state.buttons.liked
       if (state.buttons.liked) {
-        state.pageTracks = state.allTracks.filter(t=>t.liked).slice(0, TRACKS_PER_PAGE)
+        state.pageTracks = state.allTracks.filter(t => t.liked).slice(0, TRACKS_PER_PAGE)
       } else {
         state.pageTracks = state.allTracks.slice(0, TRACKS_PER_PAGE)
       }
@@ -81,7 +78,7 @@ export const trackSlice = createSlice({
 
       const likedMode = state.buttons.liked
 
-      const tracks = likedMode ? state.allTracks.filter(t=>t.liked) : state.allTracks
+      const tracks = likedMode ? state.allTracks.filter(t => t.liked) : state.allTracks
 
       if (pageNumber > 0 && tracks.length > (pageNumber * TRACKS_PER_PAGE - TRACKS_PER_PAGE)) {
         state.currentPage = pageNumber
@@ -114,7 +111,7 @@ export const trackSlice = createSlice({
         .addCase(likeTrack.fulfilled, (state, action) => {
           if (state.selectedTrack) {
             const updated = state.allTracks.filter(t => t.hash !== state.selectedTrack.hash)
-            updated.push({...state.selectedTrack, liked: true})
+            updated.push({ ...state.selectedTrack, liked: true })
             state.allTracks = updated
           }
         })
