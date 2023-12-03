@@ -36,7 +36,7 @@ export const fetchAllTracks = createAsyncThunk('tracks/fetchAll', async () => {
   return tracks
 });
 
-export const counterSlice = createSlice({
+export const trackSlice = createSlice({
   name: 'counter',
   initialState,
   reducers: {
@@ -45,14 +45,14 @@ export const counterSlice = createSlice({
     },
     changePage: (state, action: PayloadAction<number>) => {
       const pageNumber = action.payload
-      if (pageNumber > 0 && state.allTracks.length < (pageNumber * TRACKS_PER_PAGE - TRACKS_PER_PAGE)) {
+      if (pageNumber > 0 && state.allTracks.length > (pageNumber * TRACKS_PER_PAGE - TRACKS_PER_PAGE)) {
         state.currentPage = pageNumber
 
         if (pageNumber === 1) {
           state.pageTracks = state.allTracks.slice(0, TRACKS_PER_PAGE)
         }
         else {
-          state.pageTracks = state.allTracks.slice(pageNumber * TRACKS_PER_PAGE - (TRACKS_PER_PAGE - 1), pageNumber * TRACKS_PER_PAGE)
+          state.pageTracks = state.allTracks.slice(pageNumber * TRACKS_PER_PAGE - (TRACKS_PER_PAGE), pageNumber * TRACKS_PER_PAGE)
         }
       }
     },
@@ -75,7 +75,6 @@ export const counterSlice = createSlice({
   }
 })
 
-// Action creators are generated for each case reducer function
-export const { changePage, selectTrack } = counterSlice.actions
+export const { changePage, selectTrack } = trackSlice.actions
 
-export default counterSlice.reducer
+export default trackSlice.reducer

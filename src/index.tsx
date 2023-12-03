@@ -23,12 +23,11 @@ export function AppWrapper() {
 }
 
 export function App() {
-
   const selectedTrack = useSelector(
     (state: RootState) => state.tracks.selectedTrack
   )
   const pageTracks = useSelector((state: RootState) => state.tracks.pageTracks)
-  console.log('pageTraks: ', pageTracks)
+
   const currentPage = useSelector(
     (state: RootState) => state.tracks.currentPage
   )
