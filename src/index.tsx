@@ -5,7 +5,7 @@ import Player from "./components/player"
 import TracksList from "./components/tracks-list"
 import { useSelector, useDispatch } from "react-redux"
 import store, { AppDispatch, RootState } from "./redux/store"
-import { changePage, fetchAllTracks, selectTrack } from "./redux/trackSlice"
+import { changePage, fetchAllTracks, selectTrack, toggleLikedTracks } from "./redux/trackSlice"
 import { TRACKS_PER_PAGE } from "./config"
 import { Provider } from "react-redux"
 import { useEffect } from "preact/hooks"
@@ -79,6 +79,8 @@ const Search = () => {
 }
 
 const Control = () => {
+  const dispatch = useDispatch<AppDispatch>()
+  const likedMode = useSelector((state: RootState) => state.tracks.buttons.liked)
   return (
     <div class="boxer">
       <h4 class="boxer-title" style={{ minWidth: "100px" }}>
@@ -86,7 +88,8 @@ const Control = () => {
       </h4>
       <button>generate playlist</button>
       <button>open playlist</button>
-      <button>liked</button>
+      <button onClick={() => dispatch(toggleLikedTracks())}>{likedMode ? 'all tracks' : 'liked'}</button>
+
     </div>
   )
 }

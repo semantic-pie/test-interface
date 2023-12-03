@@ -2,6 +2,9 @@ import { useEffect, useRef } from "preact/hooks"
 import { Track } from "../utils/interfaces"
 import { DOWNLOAD_TRACK_URL } from "../config"
 import { setCover } from "../utils/helpers"
+import { useDispatch } from "react-redux"
+import { AppDispatch } from "../redux/store"
+import { likeTrack } from "../redux/trackSlice"
 
 
 
@@ -10,6 +13,8 @@ type PlayerProps = {
 }
 
 const Player = (props: PlayerProps) => {
+  const dispatch = useDispatch<AppDispatch>()
+
   const audio = useRef<HTMLAudioElement>(null)
   const cover = useRef<HTMLImageElement>(null)
   useEffect(() => {
@@ -63,7 +68,7 @@ const Player = (props: PlayerProps) => {
           >
             <button>prev</button>
 
-            <button>like</button>
+            <button onClick={() => dispatch(likeTrack(props.currentTrack.hash))} >like</button>
 
             <button>next</button>
           </div>
