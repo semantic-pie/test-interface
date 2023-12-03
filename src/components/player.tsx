@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "preact/hooks"
-import { Track } from "../interfaces"
+import { Track } from "../utils/interfaces"
 import { DOWNLOAD_TRACK_URL } from "../config"
-import { setCover } from "../util"
+import { setCover } from "../utils/helpers"
 
 
 
