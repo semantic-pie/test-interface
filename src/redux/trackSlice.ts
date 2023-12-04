@@ -1,11 +1,17 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
-import { Track } from '../utils/interfaces'
+import { Genre, Track } from '../utils/interfaces'
 import { TRACKS_PER_PAGE } from '../config'
 import Cookies from 'universal-cookie'
 import axios, { AxiosHeaders } from 'axios'
 
+
+function onlyUnique(value, index, array) {
+  return array.indexOf(value) === index;
+}
+
 export interface TracksState {
+  genres: Genre[]
   allTracks: Track[]
   pageTracks: Track[]
   selectedTrack?: Track
@@ -31,6 +37,7 @@ const initialState: TracksState = {
   buttons: {
     liked: false
   },
+  genres: [],
   allTracks: [],
   pageTracks: [],
   selectedTrack: undefined,
@@ -41,7 +48,7 @@ export const fetchAllTracks = createAsyncThunk('tracks/fetchAll', async () => {
   const token = new Cookies().get('token')
 
   let headers: AxiosHeaders = new AxiosHeaders()
-  if (token) headers.set('Authorization', `Bearer ${token}`)
+  if (token) headers.setAuthorization(`Bearer ${token}`)
 
   return axios.get(`http://localhost:8080/api/v1/derezhor/tracks?page=1&limit=1000`, { headers })
     .then(data => data.data as Track[])
@@ -51,8 +58,9 @@ export const likeTrack = createAsyncThunk('tracks/like', async (hash: string) =>
   const token = new Cookies().get('token')
 
   let headers: AxiosHeaders = new AxiosHeaders()
-  if (token) headers.set('Authorization', `Bearer ${token}`)
-
+  if (token) headers.setAuthorization(`Bearer ${token}`)
+  
+  console.log('token: ', token)
   return axios.post(`http://localhost:8080/api/v1/derezhor/tracks/${hash}/like`, {}, { headers })
     .then(data => data.data)
 });
@@ -101,7 +109,9 @@ export const trackSlice = createSlice({
       .addCase(fetchAllTracks.fulfilled, (state, action) => {
         state.statuses.allTracks.loading = false;
         state.allTracks = action.payload;
+        state.genres = Array.from(new Set(state.allTracks.map(t => t.genre).filter(g => !!g).map(g => JSON.stringify(g)))).map(g => JSON.parse(g) as Genre);
         state.pageTracks = state.allTracks.slice(0, TRACKS_PER_PAGE)
+        console.log('tracks: ', action.payload)
       })
       .addCase(fetchAllTracks.rejected, (state, action) => {
         state.statuses.allTracks.loading = false;

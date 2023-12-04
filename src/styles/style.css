@@ -17,6 +17,19 @@
 	cursor: pointer;
 }
 
+.genre-select {
+	cursor: pointer;
+}
+
+.genre-selected {
+	cursor: pointer;
+	color:brown;
+}
+
+.genre-select:hover {
+	color:brown;
+}
+
 
 
 /* :root {
