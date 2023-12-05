@@ -61,6 +61,17 @@ export const fetchAllTracks = createAsyncThunk('tracks/fetchAll', async () => {
     .then(data => data.data as Track[])
 });
 
+export const fetchPlaylist = createAsyncThunk('tracks/fetchPlaylist', async () => {
+  const token = new Cookies().get('token')
+
+  let headers: AxiosHeaders = new AxiosHeaders()
+  if (token) headers.setAuthorization(`Bearer ${token}`)
+
+  return axios.get(`http://localhost:8080/api/v1/derezhor/tracks/flow_playlist/playlist`, { headers })
+    .then(data => data.data as Track[])
+});
+
+
 export const likeTrack = createAsyncThunk('tracks/like', async (hash: string) => {
   const token = new Cookies().get('token')
 
@@ -69,6 +80,17 @@ export const likeTrack = createAsyncThunk('tracks/like', async (hash: string) =>
 
   console.log('token: ', token)
   return axios.post(`http://localhost:8080/api/v1/derezhor/tracks/${hash}/like`, {}, { headers })
+    .then(data => data.data)
+});
+
+export const generateNewFlowPlaylist = createAsyncThunk('tracks/generate-flow-playlist', async () => {
+  const token = new Cookies().get('token')
+
+  let headers: AxiosHeaders = new AxiosHeaders()
+  if (token) headers.setAuthorization(`Bearer ${token}`)
+
+  console.log('token: ', token)
+  return axios.post(`http://localhost:8080/api/v1/derezhor/tracks/playlist/generate`, {}, { headers })
     .then(data => data.data)
 });
 
@@ -85,23 +107,23 @@ export const trackSlice = createSlice({
         const query = action.payload.split(' ').filter(q => q.length)
         console.log(query)
         const result = []
-  
+
         for (const track of state.allTracks) {
           for (const subquery of query) {
             if (track.title?.includes(subquery)
               || track.author?.includes(subquery)
-              || track.genre?.name.includes(subquery)) { 
-                result.push(track)
-                break;
-              }
+              || track.genre?.name.includes(subquery)) {
+              result.push(track)
+              break;
+            }
           }
         }
-  
+
         state.pageTracks = result
       } else {
         state.pageTracks = [...state.allTracks]
       }
-      
+
     },
     selectTrack: (state, action: PayloadAction<Track>) => {
       state.selectedTrack = action.payload
@@ -165,7 +187,12 @@ export const trackSlice = createSlice({
       builder.addCase(logout, (state) => {
         state.pageTracks = state.allTracks.map(t => ({ ...t, liked: false }))
         state.buttons.liked = false
-      });
+      }),
+      builder
+        .addCase(fetchPlaylist.fulfilled, (state, action) => {
+          state.pageTracks = action.payload;
+          console.log('tracks: ', action.payload)
+        })
   }
 })
 

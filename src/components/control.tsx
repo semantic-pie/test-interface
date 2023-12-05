@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux"
 import { useDispatch } from "react-redux"
 import { AppDispatch, RootState } from "../redux/store"
-import { toggleLikedTracks } from "../redux/trackSlice"
+import { fetchPlaylist, generateNewFlowPlaylist, toggleLikedTracks } from "../redux/trackSlice"
 
 const Control = () => {
   const dispatch = useDispatch<AppDispatch>()
@@ -14,8 +14,8 @@ const Control = () => {
       <h4 class="boxer-title" style={{ minWidth: "100px" }}>
         Controls
       </h4>
-      <button>generate playlist</button>
-      <button>open playlist</button>
+      <button onClick={() => dispatch(generateNewFlowPlaylist())}>generate playlist</button>
+      <button onClick={() => dispatch(fetchPlaylist())}>open playlist</button>
       <button onClick={() => dispatch(toggleLikedTracks())}>
         {likedMode ? "all tracks" : "liked"}
       </button>
