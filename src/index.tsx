@@ -9,7 +9,6 @@ import {
   changePage,
   fetchAllTracks,
   selectTrack,
-  toggleLikedTracks,
 } from "./redux/trackSlice"
 import { TRACKS_PER_PAGE } from "./config"
 import { Provider } from "react-redux"
@@ -50,10 +49,8 @@ export function App() {
 
   useEffect(() => {
     dispatch(fetchAllTracks())
-  }, [dispatch])
-
+  }, [dispatch, auth.username])
   
-
   return (
     <div class="boxer" style={{ width: "fit-content" }}>
       <h1>Test interface</h1>

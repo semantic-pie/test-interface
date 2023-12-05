@@ -4,6 +4,7 @@ import { Genre, Track } from '../utils/interfaces'
 import { TRACKS_PER_PAGE } from '../config'
 import Cookies from 'universal-cookie'
 import axios, { AxiosHeaders } from 'axios'
+import { logout } from './userSlice'
 
 
 function onlyUnique(value, index, array) {
@@ -128,6 +129,10 @@ export const trackSlice = createSlice({
         .addCase(likeTrack.rejected, (state, action) => {
           console.log(action)
           console.log('you don\'t like this track!')
+        }),
+        builder.addCase(logout, (state) => {
+          state.pageTracks = state.allTracks.map(t => ({...t, liked: false}))
+          state.buttons.liked = false
         });
   }
 })

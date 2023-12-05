@@ -18,7 +18,7 @@ const UserAuth = () => {
 
   useEffect(() => {
     dispatch(tryAuth())
-  }, [])
+  }, [dispatch])
 
   return (
     <div class="boxer">
@@ -44,7 +44,8 @@ const UserAuth = () => {
               />
             )}
           </div>
-          <span>{authData.message}</span>
+          {!openLogin && !openSignUp && <span>{authData.message}</span>}
+          
         </div>
       )}
     </div>
@@ -82,20 +83,6 @@ const SignUp = (
       setUserGenres([...userGenres, genre])
     }
   }
-
-  // useEffect(() => {
-  // 		let id = undefined
-  //   if (!props.isOpen && username.length > 0 && password.length > 0) {
-  //      id = setInterval(async () => {
-  //       dispatch(auth({ username, password }))
-  // setPassword("")
-  // setUsername("")
-  // setUserGenres([])
-  // props.close()
-  //     }, 2000)
-  //   }
-  // 		return () => clearInterval(id)
-  // }, [props.isOpen])
 
   console.log("render")
   return (
