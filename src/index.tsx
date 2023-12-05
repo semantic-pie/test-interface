@@ -7,7 +7,9 @@ import { useSelector, useDispatch } from "react-redux"
 import store, { AppDispatch, RootState } from "./redux/store"
 import {
   changePage,
+  changeQuery,
   fetchAllTracks,
+  search,
   selectTrack,
 } from "./redux/trackSlice"
 import { TRACKS_PER_PAGE } from "./config"
@@ -43,6 +45,7 @@ export function App() {
         : state.tracks.allTracks.length
     )
   )
+  const query = useSelector((state: RootState) => state.tracks.search.query)
 
   const dispatch = useDispatch<AppDispatch>()
   const auth = useSelector((state: RootState) => state.user.auth)
@@ -50,7 +53,7 @@ export function App() {
   useEffect(() => {
     dispatch(fetchAllTracks())
   }, [dispatch, auth.username])
-  
+
   return (
     <div class="boxer" style={{ width: "fit-content" }}>
       <h1>Test interface</h1>
@@ -59,7 +62,7 @@ export function App() {
         <UserAuth />
       </div>
 
-      <Search />
+      <Search query={query} />
       <section style={{ display: "flex", gap: "2px" }}>
         {auth.authenticated && <Control />}
 
@@ -78,13 +81,23 @@ export function App() {
   )
 }
 
-const Search = () => {
+const Search = (props: { query: string }) => {
+  const dispatch = useDispatch()
+  const query = useSelector((state: RootState) => state.tracks.search.query)
+
+  useEffect(() => {
+    dispatch(search(query))
+  }, [query])
   return (
     <div class="boxer">
       <div
         style={{ display: "flex", gap: "5px", justifyContent: "space-between" }}
       >
-        <input type="input" value="" style={{ width: "100%" }} />
+        <input
+          onChange={(e) => dispatch(changeQuery(e.currentTarget.value))}
+          value={query}
+          style={{ width: "100%" }}
+        />
         <button>Search</button>
       </div>
     </div>

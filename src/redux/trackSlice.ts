@@ -17,6 +17,9 @@ export interface TracksState {
   pageTracks: Track[]
   selectedTrack?: Track
   currentPage: number
+  search: {
+    query: string
+  }
   buttons: {
     liked: boolean
   },
@@ -34,6 +37,9 @@ const initialState: TracksState = {
       loading: false,
       error: undefined
     }
+  },
+  search: {
+    query: ''
   },
   buttons: {
     liked: false
@@ -60,7 +66,7 @@ export const likeTrack = createAsyncThunk('tracks/like', async (hash: string) =>
 
   let headers: AxiosHeaders = new AxiosHeaders()
   if (token) headers.setAuthorization(`Bearer ${token}`)
-  
+
   console.log('token: ', token)
   return axios.post(`http://localhost:8080/api/v1/derezhor/tracks/${hash}/like`, {}, { headers })
     .then(data => data.data)
@@ -71,6 +77,32 @@ export const trackSlice = createSlice({
   name: 'tracks',
   initialState,
   reducers: {
+    changeQuery: (state, action: PayloadAction<string>) => {
+      state.search.query = action.payload
+    },
+    search: (state, action: PayloadAction<string>) => {
+      if (action.payload.length > 0) {
+        const query = action.payload.split(' ').filter(q => q.length)
+        console.log(query)
+        const result = []
+  
+        for (const track of state.allTracks) {
+          for (const subquery of query) {
+            if (track.title.includes(subquery)
+              || track.author.includes(subquery)
+              || track.genre.name.includes(subquery)) { 
+                result.push(track)
+                break;
+              }
+          }
+        }
+  
+        state.pageTracks = result
+      } else {
+        state.pageTracks = [...state.allTracks]
+      }
+      
+    },
     selectTrack: (state, action: PayloadAction<Track>) => {
       state.selectedTrack = action.payload
     },
@@ -130,14 +162,14 @@ export const trackSlice = createSlice({
           console.log(action)
           console.log('you don\'t like this track!')
         }),
-        builder.addCase(logout, (state) => {
-          state.pageTracks = state.allTracks.map(t => ({...t, liked: false}))
-          state.buttons.liked = false
-        });
+      builder.addCase(logout, (state) => {
+        state.pageTracks = state.allTracks.map(t => ({ ...t, liked: false }))
+        state.buttons.liked = false
+      });
   }
 })
 
-export const { changePage, selectTrack, toggleLikedTracks } = trackSlice.actions
+export const { changePage, selectTrack, toggleLikedTracks, search, changeQuery } = trackSlice.actions
 
 export default trackSlice.reducer
 
