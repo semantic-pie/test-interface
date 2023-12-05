@@ -88,9 +88,9 @@ export const trackSlice = createSlice({
   
         for (const track of state.allTracks) {
           for (const subquery of query) {
-            if (track.title.includes(subquery)
-              || track.author.includes(subquery)
-              || track.genre.name.includes(subquery)) { 
+            if (track.title?.includes(subquery)
+              || track.author?.includes(subquery)
+              || track.genre?.name.includes(subquery)) { 
                 result.push(track)
                 break;
               }
@@ -142,7 +142,7 @@ export const trackSlice = createSlice({
       .addCase(fetchAllTracks.fulfilled, (state, action) => {
         state.statuses.allTracks.loading = false;
         state.allTracks = action.payload;
-        state.genres = Array.from(new Set(state.allTracks.map(t => t.genre).filter(g => !!g).map(g => JSON.stringify(g)))).map(g => JSON.parse(g) as Genre);
+        state.genres = Array.from(new Set(state.allTracks.map(t => t.genre).filter(g => !!g && !!g.name).map(g => JSON.stringify(g)))).map(g => JSON.parse(g) as Genre);
         state.pageTracks = state.allTracks.slice(0, TRACKS_PER_PAGE)
         console.log('tracks: ', action.payload)
       })
