@@ -52,7 +52,7 @@ export function App() {
 
   return (
     <div class="boxer" style={{ width: "fit-content" }}>
-      <h1>Test interface</h1>
+      <h1>Pie Tunes</h1>
 
       <div style={{ display: "flex" }}>
         <UserAuth />
