@@ -4,7 +4,7 @@ import { DOWNLOAD_TRACK_URL } from "../config"
 import { setCover } from "../utils/helpers"
 import { useDispatch } from "react-redux"
 import { AppDispatch, RootState } from "../redux/store"
-import { likeTrack } from "../redux/trackSlice"
+import { dislikeTrack, likeTrack } from "../redux/trackSlice"
 import { useSelector } from "react-redux"
 
 type PlayerProps = {
