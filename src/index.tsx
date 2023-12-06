@@ -3,8 +3,7 @@ import "./styles/style.css"
 import UserAuth from "./components/user-auth"
 import Player from "./components/player"
 import TracksList from "./components/tracks-list"
-import { useSelector, useDispatch } from "react-redux"
-import store, { AppDispatch, RootState } from "./redux/store"
+import store from "./redux/store"
 import {
   changePage,
   changeQuery,
@@ -16,6 +15,7 @@ import { TRACKS_PER_PAGE } from "./config"
 import { Provider } from "react-redux"
 import { useEffect } from "preact/hooks"
 import Control from "./components/control"
+import { useAppDispatch, useAppSelector } from "./redux/hooks"
 
 function getLastPage(totalItems: number): number {
   return Math.ceil(totalItems / TRACKS_PER_PAGE)
@@ -30,25 +30,25 @@ export function AppWrapper() {
 }
 
 export function App() {
-  const selectedTrack = useSelector(
-    (state: RootState) => state.tracks.selectedTrack
+  const selectedTrack = useAppSelector(
+    state => state.tracks.selectedTrack
   )
-  const pageTracks = useSelector((state: RootState) => state.tracks.pageTracks)
+  const pageTracks = useAppSelector(state => state.tracks.pageTracks)
 
-  const currentPage = useSelector(
-    (state: RootState) => state.tracks.currentPage
+  const currentPage = useAppSelector(
+    state => state.tracks.currentPage
   )
-  const maxPage = useSelector((state: RootState) =>
+  const maxPage = useAppSelector(state =>
     getLastPage(
       state.tracks.buttons.liked
         ? state.tracks.allTracks.filter((t) => t.liked).length
         : state.tracks.allTracks.length
     )
   )
-  const query = useSelector((state: RootState) => state.tracks.search.query)
+  const query = useAppSelector(state => state.tracks.search.query)
 
-  const dispatch = useDispatch<AppDispatch>()
-  const auth = useSelector((state: RootState) => state.user.auth)
+  const dispatch = useAppDispatch()
+  const auth = useAppSelector(state => state.user.auth)
 
   useEffect(() => {
     dispatch(fetchAllTracks())
@@ -82,8 +82,8 @@ export function App() {
 }
 
 const Search = (props: { query: string }) => {
-  const dispatch = useDispatch()
-  const query = useSelector((state: RootState) => state.tracks.search.query)
+  const dispatch = useAppDispatch()
+  const query = useAppSelector(state => state.tracks.search.query)
 
   useEffect(() => {
     dispatch(search(query))

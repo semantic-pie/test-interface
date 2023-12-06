@@ -1,14 +1,12 @@
 import { useEffect, useState } from "preact/hooks"
-import { useDispatch } from "react-redux"
-import { AppDispatch, RootState } from "../redux/store"
 import { auth, logout, signUp, tryAuth } from "../redux/userSlice"
-import { useSelector } from "react-redux"
 import { HTMLProps } from "preact/compat"
+import { useAppDispatch, useAppSelector } from "../redux/hooks"
 
 const UserAuth = () => {
-  const dispatch = useDispatch<AppDispatch>()
+  const dispatch = useAppDispatch()
 
-  const authData = useSelector((state: RootState) => state.user.auth)
+  const authData = useAppSelector(state => state.user.auth)
 
   const [openLogin, setOpenLogin] = useState(false)
   const [openSignUp, setOpenSignIn] = useState(false)
@@ -53,8 +51,8 @@ const UserAuth = () => {
 }
 
 const Authenticated = () => {
-  const dispatch = useDispatch<AppDispatch>()
-  const auth = useSelector((state: RootState) => state.user.auth)
+  const dispatch = useAppDispatch()
+  const auth = useAppSelector(state => state.user.auth)
   return (
     <div style={{ display: "flex", gap: "5px" }}>
       <div>Hi, {auth.username}</div>
@@ -68,12 +66,12 @@ const Authenticated = () => {
 const SignUp = (
   props: HTMLProps<HTMLButtonElement> & { isOpen: boolean; close: () => void }
 ) => {
-  const dispatch = useDispatch<AppDispatch>()
+  const dispatch = useAppDispatch()
 
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
 
-  const genres = useSelector((state: RootState) => state.tracks.genres)
+  const genres = useAppSelector(state => state.tracks.genres)
   const [userGenres, setUserGenres] = useState<string[]>([])
 
   const toggleGenre = (genre: string) => {
@@ -156,7 +154,7 @@ const SignUp = (
 const Login = (
   props: HTMLProps<HTMLButtonElement> & { isOpen: boolean; close: () => void }
 ) => {
-  const dispatch = useDispatch<AppDispatch>()
+  const dispatch = useAppDispatch()
 
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")

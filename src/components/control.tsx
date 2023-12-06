@@ -1,12 +1,10 @@
-import { useSelector } from "react-redux"
-import { useDispatch } from "react-redux"
-import { AppDispatch, RootState } from "../redux/store"
 import { fetchPlaylist, generateNewFlowPlaylist, toggleLikedTracks } from "../redux/trackSlice"
+import { useAppDispatch, useAppSelector } from "../redux/hooks"
 
 const Control = () => {
-  const dispatch = useDispatch<AppDispatch>()
-  const likedMode = useSelector(
-    (state: RootState) => state.tracks.buttons.liked
+  const dispatch = useAppDispatch()
+  const likedMode = useAppSelector(
+    state => state.tracks.buttons.liked
   )
 
   return (

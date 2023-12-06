@@ -1,5 +1,4 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import type { PayloadAction } from '@reduxjs/toolkit'
 import Cookies from 'universal-cookie';
 import { jwtDecode } from "jwt-decode";
 
@@ -76,15 +75,6 @@ export const signUp = createAsyncThunk('user/signup', async (userData: UserSignU
       throw new Error('Errorrrrrrr');
     })
 });
-
-
-// export const logIn = createAsyncThunk('user/auth', async (userData: UserAuthData): Promise<UserLogInData> => {
-//  return fetch('http://localhost:8060/api/v1/derezhor/auth', { body: JSON.stringify(userData) }).then(data => data.json())
-// });
-
-// export const signUp = createAsyncThunk('user/auth', async (userData: UserAuthData): Promise<AuthResponse> => {
-//  return fetch('http://localhost:8060/api/v1/derezhor/auth', { body: JSON.stringify(userData) }).then(data => data.json())
-// });
 
 
 export const userSlice = createSlice({

@@ -1,8 +1,7 @@
 import { FunctionComponent } from "preact"
-import { Track } from "../utils/interfaces"
 import { HTMLProps } from "preact/compat"
-import { useSelector } from "react-redux"
-import { RootState } from "../redux/store"
+import { useAppSelector } from "../redux/hooks"
+import { Track } from "../redux/interfaces"
 
 type TracksListProps = {
   tracks: Track[]
@@ -13,7 +12,7 @@ type TracksListProps = {
 }
 
 const TracksList = (props: TracksListProps) => {
-  const likesMode = useSelector((state: RootState) => state.tracks.buttons.liked)
+  const likesMode = useAppSelector(state => state.tracks.buttons.liked)
   return (
     <div class="boxer" style={{ width: "100%" }}>
       <h4 class="boxer-title">{likesMode ? 'Liked tracks:' : 'Tracks list:'}</h4>

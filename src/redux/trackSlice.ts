@@ -1,10 +1,10 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
-import { Genre, Track } from '../utils/interfaces'
 import { TRACKS_PER_PAGE } from '../config'
 import Cookies from 'universal-cookie'
 import axios, { AxiosHeaders } from 'axios'
 import { logout } from './userSlice'
+import { Genre, Track } from './interfaces'
 
 
 function onlyUnique(value, index, array) {
@@ -189,29 +189,26 @@ export const trackSlice = createSlice({
       .addCase(fetchAllTracks.rejected, (state, action) => {
         state.statuses.allTracks.loading = false;
         state.statuses.allTracks.error = action.error.message;
-      }),
-      builder
-        .addCase(likeTrack.fulfilled, (state, action) => {
-          if (state.selectedTrack) {
-            const updated = state.allTracks.filter(t => t.hash !== state.selectedTrack.hash)
-            updated.push({ ...state.selectedTrack, liked: true })
-            state.allTracks = updated
-          }
-        })
-        .addCase(likeTrack.rejected, (state, action) => {
-          console.log(action)
-          console.log('you don\'t like this track!')
-        }),
-      builder.addCase(logout, (state) => {
+      })
+      .addCase(likeTrack.fulfilled, (state, action) => {
+        if (state.selectedTrack) {
+          const updated = state.allTracks.filter(t => t.hash !== state.selectedTrack.hash)
+          updated.push({ ...state.selectedTrack, liked: true })
+          state.allTracks = updated
+        }
+      })
+      .addCase(likeTrack.rejected, (state, action) => {
+        console.log(action)
+        console.log('you don\'t like this track!')
+      })
+      .addCase(logout, (state) => {
         state.pageTracks = state.allTracks.map(t => ({ ...t, liked: false }))
         state.buttons.liked = false
-      }),
-      builder
-        .addCase(fetchPlaylist.fulfilled, (state, action) => {
-          state.pageTracks = action.payload;
-          console.log('tracks: ', action.payload)
-        })
-      builder
+      })
+      .addCase(fetchPlaylist.fulfilled, (state, action) => {
+        state.pageTracks = action.payload;
+        console.log('tracks: ', action.payload)
+      })
       .addCase(dislikeTrack.fulfilled, (state, action) => {
         if (state.selectedTrack) {
           const updated = state.allTracks.filter(
@@ -227,16 +224,10 @@ export const trackSlice = createSlice({
       .addCase(dislikeTrack.rejected, (state, action) => {
         console.log(action);
         console.log("you like this track!");
-      });
+      })
   }
 })
 
 export const { changePage, selectTrack, toggleLikedTracks, search, changeQuery } = trackSlice.actions
 
 export default trackSlice.reducer
-
-
-// liked: org.ostis.scmemory.websocketmemory.memory.element.ScNodeImpl@122dd, org.ostis.scmemory.websocketmemory.memory.element.ScEdgeImpl@1230d, null, org.ostis.scmemory.websocketmemory.memory.element.ScNodeImpl@12309, org.ostis.scmemory.websocketmemory.memory.element.ScEdgeImpl@1230e, null]
-//        org.ostis.scmemory.websocketmemory.memory.element.ScNodeImpl@122dd, org.ostis.scmemory.websocketmemory.memory.element.ScEdgeImpl@1230d, null, org.ostis.scmemory.websocketmemory.memory.element.ScNodeImpl@12309, org.ostis.scmemory.websocketmemory.memory.element.ScEdgeImpl@1230e, null]
-//        org.ostis.scmemory.websocketmemory.memory.element.ScNodeImpl@122dd, org.ostis.scmemory.websocketmemory.memory.element.ScEdgeImpl@1230d, null, org.ostis.scmemory.websocketmemory.memory.element.ScNodeImpl@12309, org.ostis.scmemory.websocketmemory.memory.element.ScEdgeImpl@1230e, null]
-//        org.ostis.scmemory.websocketmemory.memory.element.ScNodeImpl@122dd, org.ostis.scmemory.websocketmemory.memory.element.ScEdgeImpl@1230d, null, org.ostis.scmemory.websocketmemory.memory.element.ScNodeImpl@12309, org.ostis.scmemory.websocketmemory.memory.element.ScEdgeImpl@1230e, null]

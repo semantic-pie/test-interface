@@ -1,20 +1,19 @@
 import { useEffect, useRef } from "preact/hooks"
-import { Track } from "../utils/interfaces"
+
 import { DOWNLOAD_TRACK_URL } from "../config"
 import { setCover } from "../utils/helpers"
-import { useDispatch } from "react-redux"
-import { AppDispatch, RootState } from "../redux/store"
 import { dislikeTrack, likeTrack } from "../redux/trackSlice"
-import { useSelector } from "react-redux"
+import { useAppDispatch, useAppSelector } from "../redux/hooks"
+import { Track } from "../redux/interfaces"
 
 type PlayerProps = {
   currentTrack: Track
 }
 
 const Player = (props: PlayerProps) => {
-  const dispatch = useDispatch<AppDispatch>()
-  const auth = useSelector((state: RootState) => state.user.auth)
-  const likedTracks = useSelector((state: RootState) => state.tracks.allTracks).filter(track => track.liked)
+  const dispatch = useAppDispatch()
+  const auth = useAppSelector(state => state.user.auth)
+  const likedTracks = useAppSelector(state => state.tracks.allTracks).filter(track => track.liked)
   const audio = useRef<HTMLAudioElement>(null)
   const cover = useRef<HTMLImageElement>(null)
   useEffect(() => {
