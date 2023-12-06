@@ -67,15 +67,15 @@ export const tracksSlice = createSlice({
 
     search: (state, action: PayloadAction<string>) => {
       if (action.payload.length > 0) {
-        const query = action.payload.split(' ').filter(q => q.length)
+        const query = action.payload.toLocaleLowerCase().split(' ').filter(q => q.length)
         console.log(query)
         const result = []
 
         for (const track of state.current.tracks) {
           for (const subquery of query) {
-            if (track.title?.includes(subquery)
-              || track.author?.includes(subquery)
-              || track.genre?.name.includes(subquery)) {
+            if (track.title?.toLowerCase().includes(subquery)
+              || track.author?.toLowerCase().includes(subquery)
+              || track.genre?.name.toLowerCase().includes(subquery)) {
               result.push(track)
               break;
             }
