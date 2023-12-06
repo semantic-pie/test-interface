@@ -21,14 +21,14 @@ const UserAuth = () => {
   }, [dispatch])
 
   return (
-    <div class="boxer">
+    <div class="boxer" style={{ width: "100%", }}>
       {authData.authenticated ? (
         <>
           <Authenticated />
         </>
       ) : (
         <div>
-          <div style={{ display: "flex", gap: "5px", marginBottom: "5px" }}>
+          <div style={{ display: "flex", gap: "5px" }}>
             {!openSignUp && (
               <Login
                 close={closeLogin}
@@ -84,7 +84,6 @@ const SignUp = (
     }
   }
 
-  console.log("render")
   return (
     <>
       {!props.isOpen ? (
@@ -92,7 +91,7 @@ const SignUp = (
           SignUp
         </button>
       ) : (
-        <div style={{ display: "flex", gap: "5px", flexDirection: "column" }}>
+        <div style={{display: "flex", gap: "5px", flexDirection: "column" }}>
           <div>
             <label htmlFor="name">username</label>
             <input
@@ -128,11 +127,11 @@ const SignUp = (
                 })
               }}
             >
-              Login
+              SignUp
             </button>
           </div>
           <div>
-            <div>
+            <div style={{display: 'flex', flexWrap: 'wrap', rowGap: '2px', columnGap: '10px', marginTop: '10px'}}>
               {genres.map((g) => (
                 <span
                   class={`${

@@ -21,12 +21,12 @@ export const userSlice = createSlice({
   reducers: {
     logout: (state) => {
       const cookies = new Cookies();
-      cookies.remove('token')
+      cookies.remove('jwt')
       state.auth = logoutState()
     },
     tryAuth: (state) => {
       const cookies = new Cookies();
-      const token = cookies.get('token')
+      const token = cookies.get('jwt')
 
       if (token) {
         const { username, uuid } = jwtDecode<{ username: string, uuid: string }>(token)
@@ -44,8 +44,9 @@ export const userSlice = createSlice({
         console.log('fulfilled: ', action.payload.token)
         if (action.payload.token) {
           const cookies = new Cookies();
-          cookies.remove('token')
-          cookies.set('token', action.payload.token, { path: '/', expires: new Date(new Date().getTime() + (30 * 60 * 1000)) }); // 30 minutes expiration
+          cookies.remove('jwt')
+          console.log('new token: ', action.payload.token)
+          cookies.set('jwt', action.payload.token, { path: '/', expires: new Date(new Date().getTime() + (30 * 60 * 1000)) }); // 30 minutes expiration
           const {username, uuid} = jwtDecode<{ username: string, uuid: string }>(action.payload.token)
           state.auth = loginState({username, uuid})
         }

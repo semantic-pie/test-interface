@@ -4,7 +4,7 @@ import Cookies from "universal-cookie";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 export const fetchAllTracks = createAsyncThunk('tracks/fetchAll', async () => {
- const token = new Cookies().get('token')
+ const token = new Cookies().get('jwt')
 
  let headers: AxiosHeaders = new AxiosHeaders()
  if (token) headers.setAuthorization(`Bearer ${token}`)
@@ -14,7 +14,7 @@ export const fetchAllTracks = createAsyncThunk('tracks/fetchAll', async () => {
 });
 
 export const fetchPlaylist = createAsyncThunk('tracks/fetchPlaylist', async () => {
- const token = new Cookies().get('token')
+ const token = new Cookies().get('jwt')
 
  let headers: AxiosHeaders = new AxiosHeaders()
  if (token) headers.setAuthorization(`Bearer ${token}`)
@@ -25,7 +25,7 @@ export const fetchPlaylist = createAsyncThunk('tracks/fetchPlaylist', async () =
 
 
 export const likeTrack = createAsyncThunk('tracks/like', async (hash: string) => {
- const token = new Cookies().get('token')
+ const token = new Cookies().get('jwt')
 
  let headers: AxiosHeaders = new AxiosHeaders()
  if (token) headers.setAuthorization(`Bearer ${token}`)
@@ -36,7 +36,7 @@ export const likeTrack = createAsyncThunk('tracks/like', async (hash: string) =>
 });
 
 export const generateNewFlowPlaylist = createAsyncThunk('tracks/generate-flow-playlist', async () => {
- const token = new Cookies().get('token')
+ const token = new Cookies().get('jwt')
 
  let headers: AxiosHeaders = new AxiosHeaders()
  if (token) headers.setAuthorization(`Bearer ${token}`)
@@ -49,7 +49,7 @@ export const generateNewFlowPlaylist = createAsyncThunk('tracks/generate-flow-pl
 export const dislikeTrack = createAsyncThunk(
  "tracks/dislike",
  async (hash: string) => {
-   const token = new Cookies().get("token");
+   const token = new Cookies().get('jwt');
 
    let headers: AxiosHeaders = new AxiosHeaders();
    if (token) headers.setAuthorization(`Bearer ${token}`);

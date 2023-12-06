@@ -23,7 +23,9 @@
 
 .genre-selected {
 	cursor: pointer;
-	color:brown;
+	/* color:brown; */
+	border: 1px solid black;
+	padding: 0 10px;
 }
 
 .genre-select:hover {

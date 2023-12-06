@@ -14,9 +14,6 @@ const Player = (props: PlayerProps) => {
   const dispatch = useAppDispatch()
   const auth = useAppSelector((state) => state.userSlice.auth)
 
-  const selectedTrack = useAppSelector(
-    (state) => state.tracksSlice.current.track
-  )
   const audio = useRef<HTMLAudioElement>(null)
   const cover = useRef<HTMLImageElement>(null)
   useEffect(() => {
@@ -31,8 +28,6 @@ const Player = (props: PlayerProps) => {
 
   return (
     <div class="boxer" style={{ justifyContent: "center", width: "300px" }}>
-      <h4 class="boxer-title">Player</h4>
-
       <>
         <div style={{ display: "flex", justifyContent: "center" }}>
           <img

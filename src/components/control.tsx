@@ -13,10 +13,10 @@ const Control = () => {
       <h4 class="boxer-title" style={{ minWidth: "100px" }}>
         Controls
       </h4>
-      <button onClick={() => dispatch(generateNewFlowPlaylist()).then(ignored=>dispatch(fetchPlaylist()))}>
+      <button onClick={() => dispatch(generateNewFlowPlaylist())}>
         generate playlist
       </button>
-      <button onClick={() => dispatch(togglePlaylist())}>open playlist</button>
+      <button onClick={() => dispatch(fetchPlaylist()).then(i=>dispatch(togglePlaylist()))}>open playlist</button>
       <button onClick={() => dispatch(toggleLikedTracks())}>
         {likedMode ? "all tracks" : "liked"}
       </button>

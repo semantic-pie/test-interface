@@ -171,6 +171,9 @@ export const tracksSlice = createSlice({
           state.tracks.all = getUpdatedWithLikeTracks(track, true, state.tracks.all)
           state.tracks.playlist = getUpdatedWithLikeTracks(track, true, state.tracks.playlist)
           state.current.tracks = getUpdatedWithLikeTracks(track, true, state.current.tracks)
+
+          if (state.control.likedList)
+          state.current.tracks = state.tracks.all.filter(t => t.liked)
         }
       })
       .addCase(likeTrack.rejected, (state, action) => {
@@ -182,6 +185,9 @@ export const tracksSlice = createSlice({
           state.tracks.all = getUpdatedWithLikeTracks(track, false, state.tracks.all)
           state.tracks.playlist = getUpdatedWithLikeTracks(track, false, state.tracks.playlist)
           state.current.tracks = getUpdatedWithLikeTracks(track, false, state.current.tracks)
+
+          if (state.control.likedList)
+            state.current.tracks = state.tracks.all.filter(t => t.liked)
         }
       })
       .addCase(dislikeTrack.rejected, (state, action) => {
@@ -192,7 +198,12 @@ export const tracksSlice = createSlice({
 
 const getUpdatedWithLikeTracks = (track: Track, like: boolean, tracks: Track[]) => {
   const updatedTracks = tracks.filter(t => t.hash !== track.hash)
-  updatedTracks.push({ ...track, liked: true })
+  if (updatedTracks.length !== tracks.length) {
+    track.liked = like
+    updatedTracks.push(track)
+  }
+
+      
   return updatedTracks
 }
 
