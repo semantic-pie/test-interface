@@ -72,6 +72,24 @@ export const likeTrack = createAsyncThunk('tracks/like', async (hash: string) =>
     .then(data => data.data)
 });
 
+export const dislikeTrack = createAsyncThunk(
+  "tracks/dislike",
+  async (hash: string) => {
+    const token = new Cookies().get("token");
+
+    let headers: AxiosHeaders = new AxiosHeaders();
+    if (token) headers.setAuthorization(`Bearer ${token}`);
+
+    console.log("token: ", token);
+    return axios
+      .post(
+        `http://localhost:8080/api/v1/derezhor/tracks/${hash}/dislike`,
+        {},
+        { headers }
+      )
+      .then((data) => data.data);
+  }
+);
 
 export const trackSlice = createSlice({
   name: 'tracks',
@@ -165,6 +183,23 @@ export const trackSlice = createSlice({
       builder.addCase(logout, (state) => {
         state.pageTracks = state.allTracks.map(t => ({ ...t, liked: false }))
         state.buttons.liked = false
+      }),
+      builder
+      .addCase(dislikeTrack.fulfilled, (state, action) => {
+        if (state.selectedTrack) {
+          const updated = state.allTracks.filter(
+            (t) => t.hash !== state.selectedTrack.hash
+          );
+          updated.push({ ...state.selectedTrack, liked: false });
+          state.allTracks = updated;
+          state.pageTracks = state.allTracks
+            .filter((t) => t.liked)
+            .slice(0, TRACKS_PER_PAGE);
+        }
+      })
+      .addCase(dislikeTrack.rejected, (state, action) => {
+        console.log(action);
+        console.log("you like this track!");
       });
   }
 })
