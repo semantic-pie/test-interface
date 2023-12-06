@@ -14,7 +14,7 @@ type PlayerProps = {
 const Player = (props: PlayerProps) => {
   const dispatch = useDispatch<AppDispatch>()
   const auth = useSelector((state: RootState) => state.user.auth)
-
+  const likedTracks = useSelector((state: RootState) => state.tracks.allTracks).filter(track => track.liked)
   const audio = useRef<HTMLAudioElement>(null)
   const cover = useRef<HTMLImageElement>(null)
   useEffect(() => {
@@ -69,9 +69,9 @@ const Player = (props: PlayerProps) => {
 
           {auth.authenticated && (
             <button
-              onClick={() => dispatch(likeTrack(props.currentTrack.hash))}
+              onClick={() => likedTracks.includes(props.currentTrack) ? dispatch(dislikeTrack(props.currentTrack.hash)) : dispatch(likeTrack(props.currentTrack.hash))}
             >
-              like
+              {likedTracks.includes(props.currentTrack) ? "dislike" : "like"}
             </button>
           )}
 
