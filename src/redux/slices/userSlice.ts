@@ -1,33 +1,7 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit'
 import Cookies from 'universal-cookie';
 import { jwtDecode } from "jwt-decode";
-
-export interface UserAuthData {
-  username: string,
-  password: string
-}
-
-type ROLE = 'ROLE_ADMIN' | 'ROLE_USER'
-
-export interface UserSignUpData {
-  username: string,
-  password: string,
-  userRole: ROLE,
-  favoriteGenres: { name: string, weight: number }[]
-}
-
-export interface UserLogInData {
-  username: string,
-  password: string,
-}
-
-interface AuthResponse {
-  token: string
-}
-
-interface AuthBadResponse {
-  message: string
-}
+import { auth, signUp } from '../thunks';
 
 export interface UserState {
   auth: {
@@ -43,39 +17,6 @@ const initialState: UserState = {
     authenticated: false,
   }
 }
-
-export const auth = createAsyncThunk('user/auth', async (userData: UserAuthData, { rejectWithValue }) => {
-  return fetch('http://localhost:8080/api/v1/derezhor/auth', {
-    method: 'POST',
-    body: JSON.stringify(userData),
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
-    },
-  })
-    .then((response) => {
-      if (response.ok)
-        return response.json() as Promise<AuthResponse>
-      throw new Error('Errorrrrrrr');
-    })
-});
-
-export const signUp = createAsyncThunk('user/signup', async (userData: UserSignUpData, { rejectWithValue }) => {
-  return fetch('http://localhost:8080/api/v1/derezhor/signup', {
-    method: 'POST',
-    body: JSON.stringify(userData),
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
-    },
-  })
-    .then((response) => {
-      if (response.ok)
-        return response.json() as Promise<AuthResponse>
-      throw new Error('Errorrrrrrr');
-    })
-});
-
 
 export const userSlice = createSlice({
   name: 'user',
@@ -127,11 +68,11 @@ export const userSlice = createSlice({
       .addCase(auth.rejected, (state, action) => {
         state.auth.message = 'Wrong password or username'
         state.auth.authenticated = false
-      }),
-      builder
-        .addCase(signUp.fulfilled, (state, action) => {
-          state.auth.message = undefined
-        })
+      })
+    builder
+      .addCase(signUp.fulfilled, (state, action) => {
+        state.auth.message = undefined
+      })
   }
 })
 

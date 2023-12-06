@@ -2,9 +2,9 @@ import { useEffect, useRef } from "preact/hooks"
 
 import { DOWNLOAD_TRACK_URL } from "../config"
 import { setCover } from "../utils/helpers"
-import { dislikeTrack, likeTrack } from "../redux/trackSlice"
 import { useAppDispatch, useAppSelector } from "../redux/hooks"
 import { Track } from "../redux/interfaces"
+import { dislikeTrack, likeTrack } from "../redux/thunks"
 
 type PlayerProps = {
   currentTrack: Track

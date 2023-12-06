@@ -1,7 +1,8 @@
 import { useEffect, useState } from "preact/hooks"
-import { auth, logout, signUp, tryAuth } from "../redux/userSlice"
 import { HTMLProps } from "preact/compat"
 import { useAppDispatch, useAppSelector } from "../redux/hooks"
+import { auth, signUp } from "../redux/thunks"
+import { logout, tryAuth } from "../redux/slices/userSlice"
 
 const UserAuth = () => {
   const dispatch = useAppDispatch()

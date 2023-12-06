@@ -1,5 +1,7 @@
-import { fetchPlaylist, generateNewFlowPlaylist, toggleLikedTracks } from "../redux/trackSlice"
+
 import { useAppDispatch, useAppSelector } from "../redux/hooks"
+import { toggleLikedTracks } from "../redux/slices/trackSlice"
+import { fetchPlaylist, generateNewFlowPlaylist } from "../redux/thunks"
 
 const Control = () => {
   const dispatch = useAppDispatch()

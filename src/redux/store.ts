@@ -1,6 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit'
-import trackSlice from './trackSlice'
-import userSlice from './userSlice'
+import trackSlice from './slices/trackSlice'
+import userSlice from './slices/userSlice'
+
 
 const store = configureStore({
   reducer: {

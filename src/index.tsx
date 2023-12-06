@@ -4,18 +4,13 @@ import UserAuth from "./components/user-auth"
 import Player from "./components/player"
 import TracksList from "./components/tracks-list"
 import store from "./redux/store"
-import {
-  changePage,
-  changeQuery,
-  fetchAllTracks,
-  search,
-  selectTrack,
-} from "./redux/trackSlice"
 import { TRACKS_PER_PAGE } from "./config"
 import { Provider } from "react-redux"
 import { useEffect } from "preact/hooks"
 import Control from "./components/control"
 import { useAppDispatch, useAppSelector } from "./redux/hooks"
+import { fetchAllTracks } from "./redux/thunks"
+import { changePage, changeQuery, search, selectTrack } from "./redux/slices/trackSlice"
 
 function getLastPage(totalItems: number): number {
   return Math.ceil(totalItems / TRACKS_PER_PAGE)

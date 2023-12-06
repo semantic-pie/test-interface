@@ -1,15 +1,9 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
-import { TRACKS_PER_PAGE } from '../config'
-import Cookies from 'universal-cookie'
-import axios, { AxiosHeaders } from 'axios'
 import { logout } from './userSlice'
-import { Genre, Track } from './interfaces'
-
-
-function onlyUnique(value, index, array) {
-  return array.indexOf(value) === index;
-}
+import { Genre, Track } from '../interfaces'
+import { TRACKS_PER_PAGE } from '../../config'
+import { dislikeTrack, fetchAllTracks, fetchPlaylist, likeTrack } from '../thunks'
 
 export interface TracksState {
   genres: Genre[]
@@ -51,67 +45,7 @@ const initialState: TracksState = {
   currentPage: 1
 }
 
-export const fetchAllTracks = createAsyncThunk('tracks/fetchAll', async () => {
-  const token = new Cookies().get('token')
 
-  let headers: AxiosHeaders = new AxiosHeaders()
-  if (token) headers.setAuthorization(`Bearer ${token}`)
-
-  return axios.get(`http://localhost:8080/api/v1/derezhor/tracks?page=1&limit=1000`, { headers })
-    .then(data => data.data as Track[])
-});
-
-export const fetchPlaylist = createAsyncThunk('tracks/fetchPlaylist', async () => {
-  const token = new Cookies().get('token')
-
-  let headers: AxiosHeaders = new AxiosHeaders()
-  if (token) headers.setAuthorization(`Bearer ${token}`)
-
-  return axios.get(`http://localhost:8080/api/v1/derezhor/tracks/flow_playlist/playlist`, { headers })
-    .then(data => data.data as Track[])
-});
-
-
-export const likeTrack = createAsyncThunk('tracks/like', async (hash: string) => {
-  const token = new Cookies().get('token')
-
-  let headers: AxiosHeaders = new AxiosHeaders()
-  if (token) headers.setAuthorization(`Bearer ${token}`)
-
-  console.log('token: ', token)
-  return axios.post(`http://localhost:8080/api/v1/derezhor/tracks/${hash}/like`, {}, { headers })
-    .then(data => data.data)
-});
-
-export const generateNewFlowPlaylist = createAsyncThunk('tracks/generate-flow-playlist', async () => {
-  const token = new Cookies().get('token')
-
-  let headers: AxiosHeaders = new AxiosHeaders()
-  if (token) headers.setAuthorization(`Bearer ${token}`)
-
-  console.log('token: ', token)
-  return axios.post(`http://localhost:8080/api/v1/derezhor/tracks/playlist/generate`, {}, { headers })
-    .then(data => data.data)
-});
-
-export const dislikeTrack = createAsyncThunk(
-  "tracks/dislike",
-  async (hash: string) => {
-    const token = new Cookies().get("token");
-
-    let headers: AxiosHeaders = new AxiosHeaders();
-    if (token) headers.setAuthorization(`Bearer ${token}`);
-
-    console.log("token: ", token);
-    return axios
-      .post(
-        `http://localhost:8080/api/v1/derezhor/tracks/${hash}/dislike`,
-        {},
-        { headers }
-      )
-      .then((data) => data.data);
-  }
-);
 
 export const trackSlice = createSlice({
   name: 'tracks',

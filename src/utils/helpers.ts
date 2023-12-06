@@ -24,3 +24,7 @@ export const setCover = (trackUrl, ref) => {
   })
   console.log('after')
 }
+
+export function onlyUnique(value, index, array) {
+  return array.indexOf(value) === index;
+}
