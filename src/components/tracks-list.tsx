@@ -2,6 +2,7 @@ import { FunctionComponent } from "preact"
 import { HTMLProps } from "preact/compat"
 import { useAppSelector } from "../redux/hooks"
 import { Track } from "../redux/interfaces"
+import { TRACKS_PER_PAGE } from "../config"
 
 type TracksListProps = {
   tracks: Track[]
@@ -12,10 +13,19 @@ type TracksListProps = {
 }
 
 const TracksList = (props: TracksListProps) => {
-  const likesMode = useAppSelector(state => state.tracks.buttons.liked)
+  const control = useAppSelector(state => state.tracksSlice.control)
+
+  let tracks: Track[] = []
+
+  if (props.currentPage === 1) {
+    tracks = props.tracks.slice(0, TRACKS_PER_PAGE)
+  }
+  else {
+    tracks = props.tracks.slice(props.currentPage * TRACKS_PER_PAGE - (TRACKS_PER_PAGE), props.currentPage * TRACKS_PER_PAGE)
+  }
   return (
     <div class="boxer" style={{ width: "100%" }}>
-      <h4 class="boxer-title">{likesMode ? 'Liked tracks:' : 'Tracks list:'}</h4>
+      <h4 class="boxer-title">{control.likedList ? 'Liked tracks:' : control.playlist ? 'Playlist' : 'Tracks list:'}</h4>
       <div
         style={{
           display: "flex",
@@ -24,7 +34,7 @@ const TracksList = (props: TracksListProps) => {
           padding: "0 3px",
         }}
       >
-        {props.tracks.map((t) => (
+        {tracks.map((t) => (
           <TrackCard
             title={t.title}
             author={t.author}

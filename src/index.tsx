@@ -4,17 +4,17 @@ import UserAuth from "./components/user-auth"
 import Player from "./components/player"
 import TracksList from "./components/tracks-list"
 import store from "./redux/store"
-import { TRACKS_PER_PAGE } from "./config"
 import { Provider } from "react-redux"
-import { useEffect } from "preact/hooks"
+import { useEffect, useState } from "preact/hooks"
 import Control from "./components/control"
 import { useAppDispatch, useAppSelector } from "./redux/hooks"
 import { fetchAllTracks } from "./redux/thunks"
-import { changePage, changeQuery, search, selectTrack } from "./redux/slices/trackSlice"
-
-function getLastPage(totalItems: number): number {
-  return Math.ceil(totalItems / TRACKS_PER_PAGE)
-}
+import {
+  changePage,
+  selectTrack,
+} from "./redux/slices/trackSlice"
+import Search from "./components/search"
+import { getLastPage } from "./utils/helpers"
 
 export function AppWrapper() {
   return (
@@ -25,29 +25,30 @@ export function AppWrapper() {
 }
 
 export function App() {
-  const selectedTrack = useAppSelector(
-    state => state.tracks.selectedTrack
-  )
-  const pageTracks = useAppSelector(state => state.tracks.pageTracks)
-
-  const currentPage = useAppSelector(
-    state => state.tracks.currentPage
-  )
-  const maxPage = useAppSelector(state =>
-    getLastPage(
-      state.tracks.buttons.liked
-        ? state.tracks.allTracks.filter((t) => t.liked).length
-        : state.tracks.allTracks.length
-    )
-  )
-  const query = useAppSelector(state => state.tracks.search.query)
-
   const dispatch = useAppDispatch()
-  const auth = useAppSelector(state => state.user.auth)
+
+  const track = useAppSelector((state) => state.tracksSlice.current.track)
+  const currentPage = useAppSelector((state) => state.tracksSlice.current.page)
+  const pageTracks = useAppSelector((state) => state.tracksSlice.current.tracks)
+  const maxPage = useAppSelector((state) =>
+    getLastPage(state.tracksSlice.current.tracks.length)
+  )
+
+  const { authenticated, username } = useAppSelector(
+    (state) => state.userSlice.auth
+  )
+
+  const [lastUpdate, setLastUpadte] = useState<Date>()
 
   useEffect(() => {
-    dispatch(fetchAllTracks())
-  }, [dispatch, auth.username])
+    console.log('use effect')
+    if (!lastUpdate || Date.now() - lastUpdate.getTime() > 2000 ) {
+      console.log('fetch')
+      console.log('username: ', username)
+      dispatch(fetchAllTracks())
+      setLastUpadte(new Date())
+    }
+  }, [username])
 
   return (
     <div class="boxer" style={{ width: "fit-content" }}>
@@ -57,11 +58,11 @@ export function App() {
         <UserAuth />
       </div>
 
-      <Search query={query} />
+      <Search />
       <section style={{ display: "flex", gap: "2px" }}>
-        {auth.authenticated && <Control />}
+        {authenticated && <Control />}
 
-        {selectedTrack && <Player currentTrack={selectedTrack} />}
+        {track && <Player currentTrack={track} />}
         {pageTracks.length > 0 && (
           <TracksList
             tracks={pageTracks}
@@ -72,29 +73,6 @@ export function App() {
           />
         )}
       </section>
-    </div>
-  )
-}
-
-const Search = (props: { query: string }) => {
-  const dispatch = useAppDispatch()
-  const query = useAppSelector(state => state.tracks.search.query)
-
-  useEffect(() => {
-    dispatch(search(query))
-  }, [query])
-  return (
-    <div class="boxer">
-      <div
-        style={{ display: "flex", gap: "5px", justifyContent: "space-between" }}
-      >
-        <input
-          onChange={(e) => dispatch(changeQuery(e.currentTarget.value))}
-          value={query}
-          style={{ width: "100%" }}
-        />
-        <button>Search</button>
-      </div>
     </div>
   )
 }

@@ -3,11 +3,12 @@ import { HTMLProps } from "preact/compat"
 import { useAppDispatch, useAppSelector } from "../redux/hooks"
 import { auth, signUp } from "../redux/thunks"
 import { logout, tryAuth } from "../redux/slices/userSlice"
+import { getGenre } from "../utils/helpers"
 
 const UserAuth = () => {
   const dispatch = useAppDispatch()
 
-  const authData = useAppSelector(state => state.user.auth)
+  const authData = useAppSelector(state => state.userSlice.auth)
 
   const [openLogin, setOpenLogin] = useState(false)
   const [openSignUp, setOpenSignIn] = useState(false)
@@ -53,7 +54,7 @@ const UserAuth = () => {
 
 const Authenticated = () => {
   const dispatch = useAppDispatch()
-  const auth = useAppSelector(state => state.user.auth)
+  const auth = useAppSelector(state => state.userSlice.auth)
   return (
     <div style={{ display: "flex", gap: "5px" }}>
       <div>Hi, {auth.username}</div>
@@ -72,7 +73,7 @@ const SignUp = (
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
 
-  const genres = useAppSelector(state => state.tracks.genres)
+  const genres = useAppSelector(state => getGenre(state.tracksSlice.tracks.all))
   const [userGenres, setUserGenres] = useState<string[]>([])
 
   const toggleGenre = (genre: string) => {

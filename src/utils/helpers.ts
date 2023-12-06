@@ -1,3 +1,6 @@
+import { TRACKS_PER_PAGE } from "../config";
+import { Genre, Track } from "../redux/interfaces";
+
 export const setCover = (trackUrl, ref) => {
   console.log('setCover')
   var jsmediatags = window.jsmediatags;
@@ -25,6 +28,12 @@ export const setCover = (trackUrl, ref) => {
   console.log('after')
 }
 
+export const getGenre = (tracks: Track[]) => Array.from(new Set(tracks.map(t => t.genre).filter(g => !!g && !!g.name).map(g => JSON.stringify(g)))).map(g => JSON.parse(g) as Genre); 
+
 export function onlyUnique(value, index, array) {
   return array.indexOf(value) === index;
+}
+
+export function getLastPage(totalItems: number): number {
+  return Math.ceil(totalItems / TRACKS_PER_PAGE)
 }
