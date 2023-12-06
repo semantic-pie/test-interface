@@ -45,8 +45,6 @@ const initialState: TracksState = {
   currentPage: 1
 }
 
-
-
 export const trackSlice = createSlice({
   name: 'tracks',
   initialState,
