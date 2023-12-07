@@ -7,18 +7,19 @@ const Control = () => {
   const likedMode = useAppSelector(
     (state) => state.tracksSlice.control.likedList
   )
+  const control = useAppSelector(state => state.tracksSlice.control)
 
   return (
     <div class="boxer">
-      <h4 class="boxer-title" style={{ minWidth: "100px" }}>
+      <h4 class="boxer-title min-w-[100px]">
         Controls
       </h4>
       <button onClick={() => dispatch(generateNewFlowPlaylist())}>
-        generate playlist
+        Generate<br/>playlist
       </button>
-      <button onClick={() => dispatch(fetchPlaylist()).then(i=>dispatch(togglePlaylist()))}>open playlist</button>
-      <button onClick={() => dispatch(toggleLikedTracks())}>
-        {likedMode ? "all tracks" : "liked"}
+      <button class={`${control.playlist ? 'bg-gray-200 rounded-sm' : ''}`} onClick={() => dispatch(fetchPlaylist()).then(i=>dispatch(togglePlaylist()))}>Open<br/>playlist</button>
+      <button class={`${control.likedList ? 'bg-gray-200 rounded-sm' : ''}`} onClick={() => dispatch(toggleLikedTracks())}>
+        Liked
       </button>
     </div>
   )

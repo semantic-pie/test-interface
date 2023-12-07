@@ -123,13 +123,35 @@ export const tracksSlice = createSlice({
 
       if (pageNumber > 0 && tracks.length > (pageNumber * TRACKS_PER_PAGE - TRACKS_PER_PAGE)) {
         state.current.page = pageNumber
+      }
+    },
+    nextTrack: (state) => {
+      const current = state.current.track
+      const currentIndex = state.current.tracks.sort((a, b) =>
+        a.title.localeCompare(b.title)
+      ).findIndex((t) => t.hash === current.hash)
+      const nextIndex = currentIndex + 1
+      if (currentIndex != -1 && nextIndex < state.current.tracks.length && nextIndex >= 0) {
+        const nextTrack = state.current.tracks[nextIndex]
+        state.current.track = nextTrack
+      }
+    },
+    prevTrack: (state) => {
+      const current = state.current.track
 
-        // if (pageNumber === 1) {
-        //   state.pageTracks = tracks.slice(0, TRACKS_PER_PAGE)
-        // }
-        // else {
-        //   state.pageTracks = tracks.slice(pageNumber * TRACKS_PER_PAGE - (TRACKS_PER_PAGE), pageNumber * TRACKS_PER_PAGE)
-        // }
+
+      const currentIndex = state.current.tracks.sort((a, b) =>
+        a.title.localeCompare(b.title)
+      ).findIndex((t) => t.hash === current.hash)
+      const prevIndex = currentIndex - 1
+
+      console.log('current: ', current)
+      console.log('currentIndex: ', currentIndex)
+      console.log('prevIndex: ', prevIndex)
+      if (currentIndex != -1 && prevIndex < state.current.tracks.length && prevIndex >= 0) {
+        console.log('prev: ', state.current.tracks[prevIndex])
+        const prevTrack = state.current.tracks[prevIndex]
+        state.current.track = prevTrack
       }
     },
   },
@@ -173,7 +195,7 @@ export const tracksSlice = createSlice({
           state.current.tracks = getUpdatedWithLikeTracks(track, true, state.current.tracks)
 
           if (state.control.likedList)
-          state.current.tracks = state.tracks.all.filter(t => t.liked)
+            state.current.tracks = state.tracks.all.filter(t => t.liked)
         }
       })
       .addCase(likeTrack.rejected, (state, action) => {
@@ -203,10 +225,10 @@ const getUpdatedWithLikeTracks = (track: Track, like: boolean, tracks: Track[]) 
     updatedTracks.push(track)
   }
 
-      
+
   return updatedTracks
 }
 
-export const { changePage, selectTrack, toggleLikedTracks, togglePlaylist, search, changeQuery } = tracksSlice.actions
+export const { changePage, selectTrack, toggleLikedTracks, togglePlaylist, search, changeQuery, nextTrack, prevTrack } = tracksSlice.actions
 
 export default tracksSlice.reducer

@@ -5,9 +5,10 @@ import { setCover } from "../utils/helpers"
 import { useAppDispatch, useAppSelector } from "../redux/hooks"
 import { Track } from "../redux/interfaces"
 import { dislikeTrack, likeTrack } from "../redux/thunks"
+import { nextTrack, prevTrack } from "../redux/slices/trackSlice"
 
 type PlayerProps = {
-  currentTrack: Track
+  currentTrack?: Track
 }
 
 const Player = (props: PlayerProps) => {
@@ -27,44 +28,39 @@ const Player = (props: PlayerProps) => {
   }, [props.currentTrack])
 
   return (
-    <div class="boxer" style={{ justifyContent: "center", width: "300px" }}>
+    <div class="boxer justify-center w-[300px]">
       <>
-        <div style={{ display: "flex", justifyContent: "center" }}>
+        <div class="flex justify-center">
           <img
             ref={cover}
-            style={{
-              width: "200px",
-              height: "200px",
-              backgroundColor: "white",
-            }}
+            class={`w-[200px] h-[200px] bg-white ${
+              !props.currentTrack ? "border border-1 border-black" : ""
+            }`}
+            src="/src/assets/pie-tunes-logo.svg"
           ></img>
         </div>
 
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            textAlign: "center",
-          }}
-        >
-          <span>{props.currentTrack.title}</span>
-          <span>{props.currentTrack.author}</span>
+        <div class={"flex flex-col text-center"}>
+          {props.currentTrack ? (
+            <span>{props.currentTrack.title}</span>
+          ) : (
+            <div class="h-2.5 bg-gray-300 w-[100px] mx-auto mb-2.5"></div>
+          )}
+          {props.currentTrack ? (
+            <span>{props.currentTrack.author}</span>
+          ) : (
+            <div class="h-2.5 bg-gray-300 w-[80px] mx-auto mb-2.5"></div>
+          )}
         </div>
 
         <audio ref={audio} id="audioPlayer" controls>
           Your browser does not support the audio tag.
         </audio>
 
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            padding: "0px 80px",
-          }}
-        >
-          <button>prev</button>
+        <div class="flex justify-between px-[80px]">
+          <button onClick={() => dispatch(prevTrack())}>prev</button>
 
-          {auth.authenticated && (
+          {auth.authenticated && props.currentTrack && (
             <button
               onClick={() =>
                 props.currentTrack.liked
@@ -76,7 +72,7 @@ const Player = (props: PlayerProps) => {
             </button>
           )}
 
-          <button>next</button>
+          <button onClick={() => dispatch(nextTrack())}>next</button>
         </div>
       </>
     </div>

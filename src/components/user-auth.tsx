@@ -131,7 +131,7 @@ const SignUp = (
             </button>
           </div>
           <div>
-            <div style={{display: 'flex', flexWrap: 'wrap', rowGap: '2px', columnGap: '10px', marginTop: '10px'}}>
+            <div class='flex flex-wrap gap-x-3 gap-y-[10px] mt-[10px]' >
               {genres.map((g) => (
                 <span
                   class={`${

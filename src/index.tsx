@@ -1,5 +1,5 @@
 import { render } from "preact"
-import "./styles/style.css"
+import "./styles/tailwind.css"
 import UserAuth from "./components/user-auth"
 import Player from "./components/player"
 import TracksList from "./components/tracks-list"
@@ -9,17 +9,16 @@ import { useEffect, useState } from "preact/hooks"
 import Control from "./components/control"
 import { useAppDispatch, useAppSelector } from "./redux/hooks"
 import { fetchAllTracks } from "./redux/thunks"
-import {
-  changePage,
-  selectTrack,
-} from "./redux/slices/trackSlice"
+import { changePage, selectTrack } from "./redux/slices/trackSlice"
 import Search from "./components/search"
 import { getLastPage } from "./utils/helpers"
 
 export function AppWrapper() {
   return (
     <Provider store={store}>
-      <App />
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <App />
+      </div>
     </Provider>
   )
 }
@@ -41,29 +40,30 @@ export function App() {
   const [lastUpdate, setLastUpadte] = useState<Date>()
 
   useEffect(() => {
-    console.log('use effect')
-    if (!lastUpdate || Date.now() - lastUpdate.getTime() > 2000 ) {
-      console.log('fetch')
-      console.log('username: ', username)
+    console.log("use effect")
+    if (!lastUpdate || Date.now() - lastUpdate.getTime() > 2000) {
+      console.log("fetch")
+      console.log("username: ", username)
       dispatch(fetchAllTracks())
       setLastUpadte(new Date())
     }
   }, [username])
 
   return (
-    <div class="boxer" style={{ width: "fit-content" }}>
+    <div class="boxer min-w-[400px] mt-[50px]" style={{ width: "fit-content"}}>
       <h1>Pie Tunes</h1>
 
-      <div style={{ display: "flex" }}>
+      <div class='flex'>
         <UserAuth />
       </div>
 
       <Search />
-      <section style={{ display: "flex", gap: "2px" }}>
+      <section class='flex gap-[2px]'>
         {authenticated && <Control />}
 
-        {track && <Player currentTrack={track} />}
-        {pageTracks.length > 0 && (
+        <Player currentTrack={track} />
+
+        {pageTracks.length > 0 ? (
           <TracksList
             tracks={pageTracks}
             setCurrentTrack={(track) => dispatch(selectTrack(track))}
@@ -71,8 +71,76 @@ export function App() {
             maxPage={maxPage}
             changePage={(page) => dispatch(changePage(page))}
           />
+        ) : (
+          <TrackListSkeleton />
         )}
       </section>
+    </div>
+  )
+}
+
+const TrackListSkeleton = () => {
+  return (
+    <div
+      role="status"
+      class="w-full space-y-4 border border-gray-200 divide-y divide-gray-200 rounded animate-pulse mt-5 md:p-1"
+    >
+      <div class="flex items-center justify-between">
+        <div>
+          <div class="h-2.5 bg-gray-300 w-[260px] mb-2.5"></div>
+          <div class="w-[190px] h-2 bg-gray-200  "></div>
+        </div>
+        <div class="h-2.5 bg-gray-300 w-12"></div>
+      </div>
+      <div class="flex items-center justify-between pt-4">
+        <div>
+          <div class="h-2.5 bg-gray-300  w-[230px] mb-2.5"></div>
+          <div class="w-[160px] h-2 bg-gray-200  "></div>
+        </div>
+        <div class="h-2.5 bg-gray-300  w-12"></div>
+      </div>
+      <div class="flex items-center justify-between pt-4">
+        <div>
+          <div class="h-2.5 bg-gray-300    w-[250px] mb-2.5"></div>
+          <div class="w-[170px] h-2 bg-gray-200  "></div>
+        </div>
+        <div class="h-2.5 bg-gray-300   w-12"></div>
+      </div>
+      <div class="flex items-center justify-between pt-4">
+        <div>
+          <div class="h-2.5 bg-gray-300    w-[240px] mb-2.5"></div>
+          <div class="w-[190px] h-2 bg-gray-200  "></div>
+        </div>
+        <div class="h-2.5 bg-gray-300   w-12"></div>
+      </div>
+      <div class="flex items-center justify-between pt-4">
+        <div>
+          <div class="h-2.5 bg-gray-300   w-[260px] mb-2.5"></div>
+          <div class="w-32 h-2 bg-gray-200 "></div>
+        </div>
+        <div class="h-2.5 bg-gray-300  w-12"></div>
+      </div>
+      <div class="flex items-center justify-between">
+        <div>
+          <div class="h-2.5 bg-gray-300 w-[260px] mb-2.5"></div>
+          <div class="w-[190px] h-2 bg-gray-200  "></div>
+        </div>
+        <div class="h-2.5 bg-gray-300 w-12"></div>
+      </div>
+      <div class="flex items-center justify-between pt-4">
+        <div>
+          <div class="h-2.5 bg-gray-300  w-[230px] mb-2.5"></div>
+          <div class="w-[160px] h-2 bg-gray-200  "></div>
+        </div>
+        <div class="h-2.5 bg-gray-300  w-12"></div>
+      </div>
+      <div class="flex items-center justify-between pt-4">
+        <div>
+          <div class="h-2.5 bg-gray-300    w-[250px] mb-2.5"></div>
+          <div class="w-[170px] h-2 bg-gray-200  "></div>
+        </div>
+        <div class="h-2.5 bg-gray-300   w-12"></div>
+      </div>
     </div>
   )
 }
