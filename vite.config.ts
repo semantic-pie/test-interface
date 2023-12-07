@@ -5,8 +5,13 @@ import { viteSingleFile } from 'vite-plugin-singlefile';
 // https://vitejs.dev/config/
 export default defineConfig({
 	server: {
-		port: 3000,
-	},
+		watch: {
+		  usePolling: true,
+		},
+		host: true, // needed for the Docker Container port mapping to work
+		strictPort: true,
+		port: 3000, // you can replace this port with any port
+	  },
 	plugins: [
 		preact(),
 		viteSingleFile(),
