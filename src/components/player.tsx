@@ -71,7 +71,7 @@ const Player = (props: PlayerProps) => {
           Your browser does not support the audio tag.
         </audio>
 
-        <DesktopPlayerControl />
+        <DesktopPlayerControl currentTrack={props.currentTrack}/>
         <MobilePlayerControl audio={audio} currentTrack={props.currentTrack} />
       </>
     </div>
