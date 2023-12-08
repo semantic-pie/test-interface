@@ -1,8 +1,9 @@
 import { FunctionComponent } from "preact"
-import { HTMLProps } from "preact/compat"
-import { useAppSelector } from "../redux/hooks"
+import { HTMLProps, useEffect } from "preact/compat"
+import { useAppDispatch, useAppSelector, useKeyDown } from "../redux/hooks"
 import { Track } from "../redux/interfaces"
 import { TRACKS_PER_PAGE } from "../config"
+import { nextTrack, prevTrack } from "../redux/slices/trackSlice"
 
 type TracksListProps = {
   tracks: Track[]
@@ -31,6 +32,35 @@ const TracksList = (props: TracksListProps) => {
       props.currentPage * TRACKS_PER_PAGE
     )
   }
+
+  const dispatch = useAppDispatch()
+
+  useKeyDown(() => {
+    dispatch(prevTrack())
+  }, ['ArrowUp'])
+
+  useKeyDown(() => {
+    dispatch(nextTrack())
+  }, ['ArrowDown'])
+
+  useKeyDown(() => {
+    const next = (props.currentPage + 1)
+
+    props.changePage(next)
+    
+    if (next > 0 && next < allTracks.length)
+      props.setCurrentTrack(allTracks[props.currentPage * TRACKS_PER_PAGE ])
+  }, ['ArrowRight'])
+
+  useKeyDown(() => {
+    const prev = (props.currentPage - 1)
+    
+    props.changePage(prev)
+
+    if (prev > 0 && prev < allTracks.length)
+      props.setCurrentTrack(allTracks[props.currentPage * TRACKS_PER_PAGE - TRACKS_PER_PAGE * 2])
+  }, ['ArrowLeft'])
+
   return (
     <div class="boxer w-full">
       <h4 class="boxer-title">

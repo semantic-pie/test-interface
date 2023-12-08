@@ -2,7 +2,7 @@ import { useEffect, useRef } from "preact/hooks"
 
 import { DOWNLOAD_TRACK_URL } from "../config"
 import { setCover } from "../utils/helpers"
-import { useAppDispatch, useAppSelector } from "../redux/hooks"
+import { useAppDispatch, useAppSelector, useKeyDown } from "../redux/hooks"
 import { Track } from "../redux/interfaces"
 import { dislikeTrack, likeTrack } from "../redux/thunks"
 import { nextTrack, prevTrack } from "../redux/slices/trackSlice"
@@ -23,9 +23,13 @@ const Player = (props: PlayerProps) => {
       audio.current.crossOrigin = "anonymous"
       audio.current.src = url
       setCover(url, cover)
-      audio.current.play()
     }
   }, [props.currentTrack])
+
+  useKeyDown(() => {
+    if (audio.current.paused) audio.current.play()
+    else audio.current.pause()
+  }, [' '])
 
   return (
     <div class="boxer justify-center w-[300px]">
@@ -44,12 +48,12 @@ const Player = (props: PlayerProps) => {
           {props.currentTrack ? (
             <span>{props.currentTrack.title}</span>
           ) : (
-            <div class="h-2.5 bg-gray-300 w-[100px] mx-auto mb-2.5"></div>
+            <div class="h-2.5 bg-gray-300 w-[100px] mx-auto mb-2.5 animate-pulse"></div>
           )}
           {props.currentTrack ? (
             <span>{props.currentTrack.author}</span>
           ) : (
-            <div class="h-2.5 bg-gray-300 w-[80px] mx-auto mb-2.5"></div>
+            <div class="h-2.5 bg-gray-300 w-[80px] mx-auto mb-2.5 animate-pulse"></div>
           )}
         </div>
 

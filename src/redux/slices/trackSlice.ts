@@ -119,10 +119,13 @@ export const tracksSlice = createSlice({
     },
     changePage: (state, action: PayloadAction<number>) => {
       const pageNumber = action.payload
-      const tracks = state.control.likedList ? state.current.tracks.filter(t => t.liked) : state.current.tracks
 
-      if (pageNumber > 0 && tracks.length > (pageNumber * TRACKS_PER_PAGE - TRACKS_PER_PAGE)) {
+
+      if (pageNumber > 1 && state.current.tracks.length > (pageNumber * TRACKS_PER_PAGE - TRACKS_PER_PAGE)) {
+        console.log('pageNumber1: ', pageNumber)
         state.current.page = pageNumber
+      } else {
+        state.current.page = 1
       }
     },
     nextTrack: (state) => {
