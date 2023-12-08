@@ -4,6 +4,7 @@ export interface Track {
   author: string
   liked?: boolean
   genre: Genre
+  scAddr?: number
 }
 
 export interface Genre {

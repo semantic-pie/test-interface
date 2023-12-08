@@ -62,7 +62,7 @@ const TracksList = (props: TracksListProps) => {
   }, ['ArrowLeft'])
 
   return (
-    <div class="boxer w-full">
+    <div class="boxer flex-col md:w-full">
       <h4 class="boxer-title">
         {control.likedList
           ? "Liked tracks:"
@@ -107,7 +107,7 @@ const TracksList = (props: TracksListProps) => {
             {props.currentPage - 1}
           </div>
         )}
-        <div class="pagination-button34" style={{ opacity: "0.5" }} disabled>
+        <div class="pagination-button34 text-gray-400" disabled>
           {props.currentPage}
         </div>
         {props.maxPage - props.currentPage > 0 && (
@@ -162,7 +162,7 @@ const TrackCard: FunctionComponent<HTMLProps<HTMLDivElement> & TrackProps> = ({
       }}
     >
       <span>{title}</span>
-      <span style={{ opacity: "0.5" }}>{author}</span>
+      <span class='text-gray-400'>{author}</span>
     </div>
     {props.liked && (
       <svg
