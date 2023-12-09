@@ -1,11 +1,12 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.unnamed',
-  appName: 'unnamed',
+  appId: 'io.github.semanticpie.pietunes',
+  appName: 'Pie Tunes',
   webDir: 'dist',
   server: {
-    androidScheme: 'https'
+    cleartext: true,
+    androidScheme: 'http'
   }
 };
 

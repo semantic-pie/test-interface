@@ -1,4 +1,4 @@
-package com.unnamed;
+package io.github.semanticpie.pietunes;
 
 import com.getcapacitor.BridgeActivity;
 
