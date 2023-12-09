@@ -37,3 +37,8 @@ export function onlyUnique(value, index, array) {
 export function getLastPage(totalItems: number): number {
   return Math.ceil(totalItems / TRACKS_PER_PAGE)
 }
+
+export const isSafari = () => {
+  const userAgent = window.navigator.userAgent.toLowerCase();
+  return userAgent.indexOf('safari') !== -1 && userAgent.indexOf('chrome') === -1;
+};
