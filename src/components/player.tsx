@@ -1,13 +1,12 @@
-import { MutableRef, useEffect, useRef, useState } from "preact/hooks"
+import { useEffect, useRef, useState } from "preact/hooks"
 
 import { DOWNLOAD_TRACK_URL } from "../config"
-import { setCover } from "../utils/helpers"
+import { setCover, isSafari } from "../utils/helpers"
 import { useAppDispatch, useAppSelector, useKeyDown } from "../redux/hooks"
 import { Track } from "../redux/interfaces"
 import { dislikeTrack, likeTrack } from "../redux/thunks"
 import { nextTrack, prevTrack } from "../redux/slices/trackSlice"
 import { NextIcon, PieTunesIcon, PrevIcon } from "./icons"
-import { Ref } from "preact"
 
 type PlayerProps = {
   currentTrack?: Track
@@ -15,6 +14,7 @@ type PlayerProps = {
 
 const Player = (props: PlayerProps) => {
   const [windowWidth, setWindowWidth] = useState(self.innerWidth);
+  const [safari] = useState(isSafari())
 
   const audio = useRef<HTMLAudioElement>(null)
   const cover = useRef<HTMLImageElement>(null)
@@ -34,14 +34,25 @@ const Player = (props: PlayerProps) => {
   useEffect(() => {
     if (props.currentTrack) {
       const url = DOWNLOAD_TRACK_URL + "/" + props.currentTrack.hash
-      audio.current.crossOrigin = "anonymous"
-      audio.current.src = url
-      setCover(url, cover)
+      document.title = `${props.currentTrack.title}, ${props.currentTrack.author}`
+
+      if (safari) {    
+        audio.current.src = url;
+        setCover(url, cover);
+      } else {
+        fetch(url)
+          .then(response => response.blob())
+          .then(async blob => {
+            const urlBlob = URL.createObjectURL(blob);
+            audio.current.src = urlBlob
+            setCover(url, cover)
+        })
+      }
     }
   }, [props.currentTrack])
 
   useKeyDown(() => {
-    if (audio.current.paused) audio.current.play()
+    if (audio.current.paused) audio.current.play().catch().then()
     else audio.current.pause()
   }, [" "])
 
