@@ -26,6 +26,7 @@ export function AppWrapper() {
 export function App() {
   const dispatch = useAppDispatch()
 
+  const statuses = useAppSelector(state => state.tracksSlice.statuses.all)
   const track = useAppSelector((state) => state.tracksSlice.current.track)
   const currentPage = useAppSelector((state) => state.tracksSlice.current.page)
   const pageTracks = useAppSelector((state) => state.tracksSlice.current.tracks)
@@ -71,9 +72,7 @@ export function App() {
             maxPage={maxPage}
             changePage={(page) => dispatch(changePage(page))}
           />
-        ) : (
-          <TrackListSkeleton />
-        )}
+        ) : statuses.loading ? <TrackListSkeleton /> : <div class='flex w-full'><span class='mx-auto my-auto'>Empty (</span></div> }
       </section>
     </div>
   )

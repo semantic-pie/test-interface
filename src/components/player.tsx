@@ -49,7 +49,6 @@ const Player = (props: PlayerProps) => {
     <audio
       ref={audio}
       class="mx-auto"
-      // id="audioPlayer"
       controls
     >
       Your browser does not support the audio tag.
@@ -57,7 +56,7 @@ const Player = (props: PlayerProps) => {
   )
 
   return (
-    <div class="boxer flex-col md:justify-center md:h-auto md:w-[350px]">
+    <div class="boxer flex-col md:justify-center md:h-[500px] md:w-[350px]">
       <>
         <div class="flex justify-center">
           {props.currentTrack ? (
