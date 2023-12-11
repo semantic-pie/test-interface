@@ -136,14 +136,16 @@ const SignUp = (
               SignUp
             </button>
           </div>
+
+
           <div>
-            <div class="flex flex-wrap gap-x-3 gap-y-[10px] mt-[10px]">
+            <div class="flex flex-wrap gap-x-3 gap-y-[10px] mt-[10px] ">
               {genres.map((g) => (
                 <span
-                  class={`${
+                  class={`px-[10px] border-gray-800 transition-all duration-300 ${ 
                     userGenres.includes(g.idtf)
-                      ? "genre-selected"
-                      : "genre-select"
+                      ? "text-white bg-gray-400 cursor-pointer"
+                      : " border-solid border-[1px] cursor-pointer "
                   }`}
                   onClick={() => toggleGenre(g.idtf)}
                 >
