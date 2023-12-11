@@ -67,7 +67,7 @@ const Player = (props: PlayerProps) => {
   )
 
   return (
-    <div class="boxer flex-col md:justify-center md:h-[500px] md:w-[350px]">
+    <div class="bg-white/30 rounded-xl px-5 py-8  flex flex-col md:justify-center md:h-[500px] md:w-[350px] gap-4">
       <>
         <div class="flex justify-center">
           {props.currentTrack ? (

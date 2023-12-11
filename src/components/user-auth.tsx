@@ -21,7 +21,7 @@ const UserAuth = () => {
   }, [dispatch])
 
   return (
-    <div class="boxer w-full flex-col w-100%">
+    <div class="rounded-xl bg-white/30 p-2 flex w-full flex-col w-100%">
       {authData.authenticated ? (
         <>
           <Authenticated />

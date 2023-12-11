@@ -10,7 +10,7 @@ const Search = () => {
     dispatch(search(query))
   }, [query])
   return (
-    <div class="boxer flex-col">
+    <div class="flex flex-col">
       <div class="flex gap-2 justify-between">
         <input
           onChange={(e) => dispatch(changeQuery(e.currentTarget.value))}

@@ -51,7 +51,10 @@ export function App() {
   }, [username])
 
   return (
-    <div class="boxer flex-col mx-auto w-11/12  sm:w-11/12 md:min-w-[400px] md:w-11/12 lg:w-8/12 mt-[15px] sm:mt-[30px] md:mt-[50px]  mb-[220px] md:mb-0" >
+    <div
+      class="rounded-xl px-8 py-5 shadow-lg flex flex-col gap-2 mx-auto w-11/12 sm:w-11/12 md:min-w-[400px] md:w-11/12 lg:w-8/12 mt-[15px] sm:mt-[30px] md:mt-[50px]  mb-[220px] md:mb-0 bg-white/40"
+      style={{ backdropFilter: 'blur(7px)'}}
+    >
       <h1>Pie Tunes</h1>
 
       <div class='flex'>
