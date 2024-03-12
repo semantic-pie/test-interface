@@ -16,7 +16,7 @@ import { getLastPage } from "./utils/helpers"
 export function AppWrapper() {
   return (
     <Provider store={store}>
-      <div style={{ display: "flex", justifyContent: "center" }}>
+      <div class='flex justify-center'>
         <App />
       </div>
     </Provider>
@@ -26,6 +26,7 @@ export function AppWrapper() {
 export function App() {
   const dispatch = useAppDispatch()
 
+  const statuses = useAppSelector(state => state.tracksSlice.statuses.all)
   const track = useAppSelector((state) => state.tracksSlice.current.track)
   const currentPage = useAppSelector((state) => state.tracksSlice.current.page)
   const pageTracks = useAppSelector((state) => state.tracksSlice.current.tracks)
@@ -50,7 +51,7 @@ export function App() {
   }, [username])
 
   return (
-    <div class="boxer min-w-[400px] mt-[50px]" style={{ width: "fit-content"}}>
+    <div class="boxer flex-col mx-auto w-11/12  sm:w-11/12 md:min-w-[400px] md:w-11/12 lg:w-8/12 mt-[15px] sm:mt-[30px] md:mt-[50px]  mb-[220px] md:mb-0" >
       <h1>Pie Tunes</h1>
 
       <div class='flex'>
@@ -58,7 +59,7 @@ export function App() {
       </div>
 
       <Search />
-      <section class='flex gap-[2px]'>
+      <section class='flex flex-col md:flex-row gap-2'>
         {authenticated && <Control />}
 
         <Player currentTrack={track} />
@@ -71,9 +72,7 @@ export function App() {
             maxPage={maxPage}
             changePage={(page) => dispatch(changePage(page))}
           />
-        ) : (
-          <TrackListSkeleton />
-        )}
+        ) : statuses.loading ? <TrackListSkeleton /> : <div class='flex w-full'><span class='mx-auto my-auto'>Empty (</span></div> }
       </section>
     </div>
   )

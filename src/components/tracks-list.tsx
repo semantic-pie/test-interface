@@ -1,8 +1,9 @@
 import { FunctionComponent } from "preact"
-import { HTMLProps } from "preact/compat"
-import { useAppSelector } from "../redux/hooks"
+import { HTMLProps, useEffect } from "preact/compat"
+import { useAppDispatch, useAppSelector, useKeyDown } from "../redux/hooks"
 import { Track } from "../redux/interfaces"
 import { TRACKS_PER_PAGE } from "../config"
+import { nextTrack, prevTrack } from "../redux/slices/trackSlice"
 
 type TracksListProps = {
   tracks: Track[]
@@ -31,8 +32,37 @@ const TracksList = (props: TracksListProps) => {
       props.currentPage * TRACKS_PER_PAGE
     )
   }
+
+  const dispatch = useAppDispatch()
+
+  useKeyDown(() => {
+    dispatch(prevTrack())
+  }, ['ArrowUp'])
+
+  useKeyDown(() => {
+    dispatch(nextTrack())
+  }, ['ArrowDown'])
+
+  useKeyDown(() => {
+    const next = (props.currentPage + 1)
+
+    props.changePage(next)
+    
+    if (next > 0 && next < allTracks.length)
+      props.setCurrentTrack(allTracks[props.currentPage * TRACKS_PER_PAGE ])
+  }, ['ArrowRight'])
+
+  useKeyDown(() => {
+    const prev = (props.currentPage - 1)
+    
+    props.changePage(prev)
+
+    if (prev > 0 && prev < allTracks.length)
+      props.setCurrentTrack(allTracks[props.currentPage * TRACKS_PER_PAGE - TRACKS_PER_PAGE * 2])
+  }, ['ArrowLeft'])
+
   return (
-    <div class="boxer w-full">
+    <div class="boxer flex-col md:w-full">
       <h4 class="boxer-title">
         {control.likedList
           ? "Liked tracks:"
@@ -77,7 +107,7 @@ const TracksList = (props: TracksListProps) => {
             {props.currentPage - 1}
           </div>
         )}
-        <div class="pagination-button34" style={{ opacity: "0.5" }} disabled>
+        <div class="pagination-button34 text-gray-400" disabled>
           {props.currentPage}
         </div>
         {props.maxPage - props.currentPage > 0 && (
@@ -132,7 +162,7 @@ const TrackCard: FunctionComponent<HTMLProps<HTMLDivElement> & TrackProps> = ({
       }}
     >
       <span>{title}</span>
-      <span style={{ opacity: "0.5" }}>{author}</span>
+      <span class='text-gray-400'>{author}</span>
     </div>
     {props.liked && (
       <svg
