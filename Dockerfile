@@ -1,5 +1,5 @@
-FROM node:18-alpine
-RUN apk add g++ make python
+FROM node:20-alpine
+RUN apk add g++ make py3-pip
 WORKDIR /app
 
 COPY package.json .
