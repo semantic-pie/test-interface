@@ -1,6 +1,13 @@
-FROM node:20-alpine as build
+FROM node:18-alpine
+RUN apk add g++ make python
 WORKDIR /app
+
 COPY package.json .
-RUN npm i
+
+RUN npm install
+
 COPY . .
-CMD ["npm", "run", "dev"]
+
+EXPOSE 3000
+
+CMD [ "npm", "run", "dev" ]
